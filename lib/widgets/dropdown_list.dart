@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 
 class DropDownList extends StatefulWidget {
-  const DropDownList({Key? key}) : super(key: key);
+  String _textLabel = 'label';
+  late List<String> _textList;
+
+  DropDownList(
+      {Key? key, required String textLabel, required List<String> textList})
+      : super(key: key) {
+    _textLabel = textLabel;
+    _textList = textList;
+  }
 
   @override
-  State<DropDownList> createState() => _DropDownListState();
+  State<DropDownList> createState() => _DropDownListState(_textList.first);
 }
 
 class _DropDownListState extends State<DropDownList> {
-  String dropDownValue = 'All Sky Surface Shortwave Downward Irradiance';
+  String? dropdownValue;
+  _DropDownListState(this.dropdownValue);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          Text('Solar Fluxes and Related'),
+          Text(widget._textLabel),
           DropdownButton<String>(
-            value: dropDownValue,
+            value: dropdownValue,
             icon: const Icon(Icons.arrow_downward),
             iconSize: 24,
             elevation: 16,
@@ -26,15 +35,12 @@ class _DropDownListState extends State<DropDownList> {
               height: 2,
               color: Colors.amber,
             ),
-            onChanged: (String? value) {
+            onChanged: (String? valueInput) {
               setState(() {
-                dropDownValue = value!;
+                dropdownValue = valueInput!;
               });
             },
-            items: <String>[
-              'All Sky Surface Shortwave Downward Irradiance',
-              'Clear Sky Surface Shortwave Downward'
-            ]
+            items: widget._textList
                 .map<DropdownMenuItem<String>>(
                     (String value) => DropdownMenuItem(
                           value: value,

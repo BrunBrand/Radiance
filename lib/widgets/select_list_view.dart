@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sun_time/pages/home/home.dart';
 import '../styles.dart';
 
 class SelectListView extends StatefulWidget {
   late String _listLabel;
   late List<String> _list;
+
+  late final IntCallback onSonChanged;
 
   SelectListView(
       {Key? key, required String listLabel, required List<String> list})
@@ -18,11 +21,13 @@ class SelectListView extends StatefulWidget {
 }
 
 class _SelectListViewState extends State<SelectListView> {
-  List<String> _selectedItems = [];
   List<bool> _selectedBoxes = List.filled(10, false);
+
+  int itensSelected = 0;
 
   @override
   Widget build(BuildContext context) {
+    //print(_selectedItems);
     return Container(
       child: Column(
         children: [
@@ -36,9 +41,15 @@ class _SelectListViewState extends State<SelectListView> {
                 tileColor: Colors.blue,
                 onTap: () {
                   setState(() {
-                    _selectedBoxes[index] == true
-                        ? _selectedBoxes[index] = false
-                        : _selectedBoxes[index] = true;
+                    if (_selectedBoxes[index] == true) {
+                      _selectedBoxes[index] = false;
+
+                      Home.of(context)!.setList(widget._list[index]);
+                    } else {
+                      _selectedBoxes[index] = true;
+
+                      Home.of(context)!.setList(widget._list[index]);
+                    }
                   });
                 },
                 leading: Checkbox(

@@ -3,8 +3,83 @@ import 'package:sun_time/widgets/dropdown_list.dart';
 import 'package:sun_time/widgets/select_list_view.dart';
 import '../../styles.dart';
 
+enum listEnum {
+  ALLSKY_SFC_SW_DWN,
+  CLRSKY_SFC_SW_DWN,
+  ALLSKY_KT,
+  ALLSKY_NKT,
+  ALLSKY_SFC_LW_DWN,
+  ALLSKY_SFC_PAR_TOT,
+  CLRSKY_SFC_PAR_TOT,
+  ALLSKY_SFC_UVA,
+  ALLSKY_SFC_UVB,
+  ALLSKY_SFC_UV_INDEX,
+  T2M,
+  T2MDEW,
+  T2MWET,
+  TS,
+  T2M_RANGE,
+  T2M_MAX,
+  T2M_MIN,
+  QV2M,
+  RH2M,
+  PRECTOTCORR,
+  PS,
+  WS2M,
+  WS10M,
+  WS10M_MAX,
+  WS10M_MIN,
+  WS10M_RANGE,
+  WS50M,
+  WS50M_MAX,
+  WS50M_MIN,
+  WS50M_RANGE
+}
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  static String EnumToString(String value) {
+    switch (value) {
+      case 'All Sky Surface Shortwave Downward Irradiance':
+        return listEnum.ALLSKY_SFC_SW_DWN.toString();
+      case 'Clear Sky Surface Shortwave':
+        return listEnum.CLRSKY_SFC_SW_DWN.toString();
+      case 'All Sky Insolation Clearness Index':
+        return listEnum.ALLSKY_KT.toString();
+      case 'All Sky Normalized Insolation Clearness Index':
+        return listEnum.ALLSKY_NKT.toString();
+      case 'All Sky Surface Longwave Downward Irradiance (Thermal Infrarred)':
+        return listEnum.ALLSKY_SFC_LW_DWN.toString();
+      case 'All Sky Surface Photosynthetically Active Radiation (PAR) Total':
+        return listEnum.ALLSKY_SFC_PAR_TOT.toString();
+      case 'Clear Sky Surface Photosynthetically Active Radiation (PAR) Total':
+        return listEnum.CLRSKY_SFC_PAR_TOT.toString();
+      case 'All Sky Surface UVA Irradiance':
+        return listEnum.ALLSKY_SFC_UVA.toString();
+      case 'All Sky Surface UVB Irradiance':
+        return listEnum.ALLSKY_SFC_UVB.toString();
+      case 'All Sky Surface UV Index':
+        return listEnum.ALLSKY_SFC_UV_INDEX.toString();
+
+      case 'Temperature at 2 Meters':
+        return listEnum.T2M.toString();
+      case 'Dew/Frost Point at 2 Meters':
+        return listEnum.T2MDEW.toString();
+      case 'Earth Skin Temperature':
+        return listEnum.T2MWET.toString();
+      case 'Temperature at 2 Meters Range':
+        return listEnum.TS.toString();
+
+      case 'Temperature at 2 Meters Maximum':
+        return listEnum.T2M_RANGE.toString();
+      case 'Temperature at 2 Meters Maximum':
+        return listEnum.T2MWET.toString();
+
+      default:
+        return 'Error 404';
+    }
+  }
 
   @override
   _HomeState createState() => _HomeState();
@@ -14,59 +89,56 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _nOfSelectedItems = 0;
-  String selected = '0';
+  late List<String> _parameters = [];
 
-  final textController = TextEditingController();
+  late List<listEnum> _enumParameters = listEnum.values;
 
-  late List<String> _list = [];
+  List<String> _list = [];
+
+  Color checkBoxColor = Colors.amber;
 
   void setList(String value) {
     setState(() {
-      _list.contains(value) ? _list.remove(value) : _list.add(value);
+      if (_parameters == 20) {
+        checkBoxColor = Colors.red;
+      }
+
+      if (_parameters.contains(Home.EnumToString(value).split('.').last)) {
+        _parameters.remove(Home.EnumToString(value).split('.').last);
+        //_enumParameters.add(_parameters.)
+      } else {
+        _parameters.add(Home.EnumToString(value).split('.').last);
+      }
     });
-  }
-
-/*
-  String _string = '0';
-
-  set string(String value) => setState(() {
-        if (_list.contains(value)) {
-          _list.remove(value);
-        } else
-          _list.add(value);
-      });
-*/
-  @override
-  void initState() {
-    super.initState();
-    textController.addListener(() {
-      selected = _list.length.toString();
-    });
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_list);
+    print(_parameters);
+
+    //print(_enumParameters);
     return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
           alignment: Alignment.topRight,
           children: [
             Container(
+              margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.01,
+                right: MediaQuery.of(context).size.height * 0.01,
+              ),
               decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: checkBoxColor,
                   borderRadius: BorderRadius.all(Radius.circular(100))),
-              height: MediaQuery.of(context).size.height * 0.05,
-              width: MediaQuery.of(context).size.width * 0.1,
+              height: MediaQuery.of(context).size.height * 0.07,
+              width: MediaQuery.of(context).size.width * 0.14,
               alignment: Alignment.center,
-              child: Text(_list.length.toString()),
+              child: Text(_parameters.length.toString()),
+            ),
+            Container(
+              alignment: Alignment.topCenter,
+              child:
+                  ElevatedButton(onPressed: () {}, child: Text('Send request')),
             ),
             SingleChildScrollView(
               child: Column(
@@ -95,7 +167,7 @@ class _HomeState extends State<Home> {
                     'Earth Skin Temperature',
                     'Temperature at 2 Meters Range',
                     'Temperature at 2 Meters Maximum',
-                    'Temperature at 2 Meters Maximum'
+                    'Temperature at 2 Meters Minimum'
                   ]),
                   SelectListView(listLabel: 'Humidity', list: const [
                     'Specific Humidity at 2 Meters',

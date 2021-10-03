@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sun_time/api/apiTest.dart';
+import 'package:sun_time/api/api_test.dart';
 import 'package:sun_time/pages/home/home.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
